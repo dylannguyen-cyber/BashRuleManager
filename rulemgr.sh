@@ -21,14 +21,28 @@ DB_FILE = "/tmp/rules.db"
 
 usage() {
     # TODO: main usage() implementation
+    echo "Bash Rule Manager: $0 {list|add|del} [RULE|LINE_NUMBER]"                      
+    echo " List                 - Display all rules with line numbers in the file"
+    echo " add RULE             - append the RULE at the LINE_NUMBER"
+    echo " del LINE_NUMBER      - Delete rule at the LINE_NUMBER"
     exit 1
 }
+# Tip or Gotcha: 
+# Consider | as ORing the variables in the "list".
+# [] considers optional cases of arguments, depending on the command.
+# {} requires either one of the arguments to be executed.
 
 # Check if the /tmp/rules.db exists using command "touch"
 # Handle errors with print statements
 initdb() {
-    # TODO: check if tmp/rules.db exists
-    exit 1
+    # Check if the infrastructure exists, if not we will instantiate it.
+    # Touch has 2 cases: 
+    # It can create an empty file if the file doesn't exist
+    # It can update the access and status of a file in current time.
+
+    if [[ ! -f "$DB_FILE" ]]; then
+        touch "$DB_FILE"
+    fi
 }
 
 # Main Script Logic 
@@ -41,16 +55,26 @@ initdb() {
 
 case "$COMMAND" in 
 list) 
-# TODO: call initdb(), check if file has content. 
 # we will use 'nl' to display line numbers
-# else, error print
+# List all rules on the list
+# we will use conditional flags -s and -v for checking if file exists and the line number associated with the text
+
+initdb
+if [[  -s "$DB_FILE" ]]; then
+    echo "-----RULES DATABASE-----"
+    nl -v 1 "$DB_FILE"
+else 
+    echo "ERROR: No rules found in database."
+fi
 ;;
+
 add)
 # TODO: check if text ($2) exists
 # else, error print and recall usage() 
 # call initdb() and append $2 to /tmp/rules.db by using '>>'
 # Print a success message to show approval
 ;;
+
 del)
 # TODO: check if text ($2) exists
 # else, error print and recall usage() 
