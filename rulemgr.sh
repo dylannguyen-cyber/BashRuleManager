@@ -50,8 +50,13 @@ initdb() {
 
 # Check if # of arguments are required 
 # else, recall usage()
+if [[ $# -lt 1]]; then 
+    echo "ERROR: Please include the correct number of arguments."
+    usage
+fi
 
 # Store ($1) first argument in COMMAND
+COMMAND = $1
 
 case "$COMMAND" in 
 list) 
@@ -60,7 +65,7 @@ list)
 # we will use conditional flags -s and -v for checking if file exists and the line number associated with the text
 
 initdb
-if [[  -s "$DB_FILE" ]]; then
+if [[-s "$DB_FILE" ]]; then
     echo "-----RULES DATABASE-----"
     nl -v 1 "$DB_FILE"
 else 
@@ -69,26 +74,67 @@ fi
 ;;
 
 add)
-# TODO: check if text ($2) exists
-# else, error print and recall usage() 
-# call initdb() and append $2 to /tmp/rules.db by using '>>'
+# Check if text ($2) exists by checking the number of arguments in the command.
+# Else, error print and recall usage() 
+# Call initdb() and append $2 to /tmp/rules.db by using '>>'
 # Print a success message to show approval
+
+#Check if the 2nd argument is included
+if [[$# -lt 2]]; then
+    echo "ERROR: Please include the correct number of arguments."
+    usage
+fi 
+
+initdb 
+echo "$2" >> "$DB_FILE"
+echo "SUCCESS: Rule has been added."
 ;;
 
 del)
-# TODO: check if text ($2) exists
-# else, error print and recall usage() 
+# Check if text ($2) exists
+# Else, error print and recall usage() 
 # Store the text ($2) in a line number variable
 # Validate if it is an integer 
-# else, error print and recall usage()
-# call initdb()
-# check if line number exists in file 
-# else, print error and exit 1
+# Else, error print and recall usage()
+# Call initdb()
+# Eheck if line number exists in file 
+# Else, print error and exit 1
 # We will use sed -i to delete lines of the file
 # Then, print a success message to show approval
+
+#Check if the 2nd argument is included
+if [[$# -lt 2]]; then
+    echo "ERROR: Please include the correct number of arguments."
+    usage
+fi 
+
+LINENUM = $2
+
+# Here we will use regex validation for $2.(=~)
+# This means the the value of the LINENUM should match ^[0-9]+$.
+# ^ and $ are anchors for the string and integers must be [0-9] and + meaning we can include more than one char/digit.
+
+if ![["$LINENUM" =~ ^[0-9]+$ ]]; then
+    echo "ERROR: Please only include integers for $0 {del} [LINE_NUMBER]."
+    usage
+fi
+
+initdb
+if [[ ! -s "$DB_FILE" ]] || [[$(wc -l < "$DBFILE" -lt $LINENUM)]]; then
+    echo "ERROR: Line number does not exist in file."
+    exit 1
+fi
+
+# sed is a stream editor that can delete lines, replace, insert, and extract texts
+# -i means we activate the editing flag to d (delete) the line number stored in LINENUM from file DBFILE
+sed -i "{$LINENUM}d" "$DBFILE"
+echo "SUCCESS: Rule at $LINENUM is now deleted."
+;;
 
 *)
 
 # TODO: Handle any other errors for any unknown commands and recall usage()
+echo "ERROR: Please use commands listed: $0 {list|add|del} [RULE|LINE_NUMBER]"
+usage
 ;;
 esac
