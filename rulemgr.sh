@@ -20,7 +20,7 @@ DB_FILE = "/tmp/rules.db"
 # - Exit with code 1 -> "end of program"
 
 usage() {
-    # TODO: main usage() implementation
+    # Main usage() implementation
     echo "Bash Rule Manager: $0 {list|add|del} [RULE|LINE_NUMBER]"                      
     echo " List                 - Display all rules with line numbers in the file"
     echo " add RULE             - append the RULE at the LINE_NUMBER"
@@ -60,9 +60,9 @@ COMMAND = $1
 
 case "$COMMAND" in 
 list) 
-# we will use 'nl' to display line numbers
+# We will use 'nl' to display line numbers
 # List all rules on the list
-# we will use conditional flags -s and -v for checking if file exists and the line number associated with the text
+# We will use conditional flags -s and -v for checking if file exists and the line number associated with the text
 
 initdb
 if [[-s "$DB_FILE" ]]; then
@@ -133,7 +133,7 @@ echo "SUCCESS: Rule at $LINENUM is now deleted."
 
 *)
 
-# TODO: Handle any other errors for any unknown commands and recall usage()
+# Handle any other errors for any unknown commands and recall usage()
 echo "ERROR: Please use commands listed: $0 {list|add|del} [RULE|LINE_NUMBER]"
 usage
 ;;
