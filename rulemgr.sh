@@ -1,4 +1,5 @@
-#!/bin/bash         #To compile with the Bash Terminal
+#!/bin/bash         
+#To compile with the Bash Terminal
 
 # Rule Manager Script 
 # This is a Bash Rule Manager script for the user story task: As a Bash Learner, 
@@ -12,7 +13,7 @@
 # $2 = "myRule"         rule text - $2
 # $# = 2                Total arguments/parameters
 
-DB_FILE = "/tmp/rules.db"
+DB_FILE="/tmp/rules.db"
 
 # usage() function is the main function to display:
 # - Script name and basic format usage
@@ -22,7 +23,7 @@ DB_FILE = "/tmp/rules.db"
 usage() {
     # Main usage() implementation
     echo "Bash Rule Manager: $0 {list|add|del} [RULE|LINE_NUMBER]"                      
-    echo " List                 - Display all rules with line numbers in the file"
+    echo " list                 - Display all rules with line numbers in the file"
     echo " add RULE             - append the RULE at the LINE_NUMBER"
     echo " del LINE_NUMBER      - Delete rule at the LINE_NUMBER"
     exit 1
@@ -50,13 +51,13 @@ initdb() {
 
 # Check if # of arguments are required 
 # else, recall usage()
-if [[ $# -lt 1]]; then 
+if [[ $# -lt 1 ]]; then 
     echo "ERROR: Please include the correct number of arguments."
     usage
 fi
 
 # Store ($1) first argument in COMMAND
-COMMAND = $1
+COMMAND=$1
 
 case "$COMMAND" in 
 list) 
@@ -65,7 +66,7 @@ list)
 # We will use conditional flags -s and -v for checking if file exists and the line number associated with the text
 
 initdb
-if [[-s "$DB_FILE" ]]; then
+if [[ -s "$DB_FILE" ]]; then
     echo "-----RULES DATABASE-----"
     nl -v 1 "$DB_FILE"
 else 
@@ -80,7 +81,7 @@ add)
 # Print a success message to show approval
 
 #Check if the 2nd argument is included
-if [[$# -lt 2]]; then
+if [[ $# -lt 2 ]]; then
     echo "ERROR: Please include the correct number of arguments."
     usage
 fi 
@@ -103,31 +104,31 @@ del)
 # Then, print a success message to show approval
 
 #Check if the 2nd argument is included
-if [[$# -lt 2]]; then
+if [[ $# -lt 2 ]]; then
     echo "ERROR: Please include the correct number of arguments."
     usage
 fi 
 
-LINENUM = $2
+LINENUM=$2
 
 # Here we will use regex validation for $2.(=~)
 # This means the the value of the LINENUM should match ^[0-9]+$.
 # ^ and $ are anchors for the string and integers must be [0-9] and + meaning we can include more than one char/digit.
 
-if ![["$LINENUM" =~ ^[0-9]+$ ]]; then
+if ! [[  "$LINENUM" =~ ^[0-9]+$ ]]; then
     echo "ERROR: Please only include integers for $0 {del} [LINE_NUMBER]."
     usage
 fi
 
 initdb
-if [[ ! -s "$DB_FILE" ]] || [[$(wc -l < "$DBFILE" -lt $LINENUM)]]; then
+if [[ ! -s "$DB_FILE" ]] || [[ $(wc -l < "$DB_FILE") -lt $LINENUM ]]; then
     echo "ERROR: Line number does not exist in file."
     exit 1
 fi
 
 # sed is a stream editor that can delete lines, replace, insert, and extract texts
 # -i means we activate the editing flag to d (delete) the line number stored in LINENUM from file DBFILE
-sed -i "{$LINENUM}d" "$DBFILE"
+sed -i "${LINENUM}d" "$DB_FILE"
 echo "SUCCESS: Rule at $LINENUM is now deleted."
 ;;
 
