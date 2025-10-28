@@ -5,7 +5,7 @@ This Bash script is a Rule Manager that manages a list of rules stored in a text
     Basic Usage:
     ./rulemgr.sh {list|add|del} [RULE|LINE_NUMBER]
 
-#Tips or Gotchas: 
+# Tips or Gotchas: 
  Consider | as ORing the variables in the "list".
  [] considers optional cases of arguments, depending on the command.
  {} requires either one of the arguments to be executed.
