@@ -26,6 +26,6 @@ Tips or Gotchas:
 Script Not Executable 
 - chmod +x rulemgr.sh
 Using > instead of >> 
-- > = overwrites, >> = appends
+- ">" = overwrites, ">>" = appends
 Non-numeric line number
 - Use only numbers for del
